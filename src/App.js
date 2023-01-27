@@ -1,4 +1,3 @@
-import "./categories.styles.scss";
 import CategoryData from "./components/category-data/category-data.component";
 
 const App = () => {
