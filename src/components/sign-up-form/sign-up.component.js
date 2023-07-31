@@ -1,11 +1,15 @@
-import { useState } from "react";
-import FormInput from "../form-input/form-input.component";
+import { useState, useContext } from "react";
+
 import {
-  createAuthUserWithEmailAndPassword,
+  createUserWithEmailAndPasswordHandler,
   createUserProfileDocument,
 } from "../../utils/firebase/firebase.utils";
-import "./sign-up.styles.scss";
+
+import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
+import { UserContext } from "../../context/user.context";
+
+import "./sign-up.styles.scss";
 
 const defaultFormField = {
   displayName: "",
@@ -18,6 +22,8 @@ const SignUpForm = () => {
   const [formField, setFormField] = useState(defaultFormField);
   const { displayName, email, password, confirmPassword } = formField;
 
+  const { setCurrentUser } = useContext(UserContext);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormField({ ...formField, [name]: value });
@@ -25,16 +31,28 @@ const SignUpForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const { displayName, email, password, confirmPassword } = formField;
+
     if (password !== confirmPassword) {
       alert("Passwords don't match");
       return;
     }
+
     try {
-      const user = await createAuthUserWithEmailAndPassword(email, password);
-      await createUserProfileDocument(user, { displayName });
+      const { user } = await createUserWithEmailAndPasswordHandler(
+        email,
+        password
+      );
       setFormField(defaultFormField);
+      await createUserProfileDocument(user, { displayName });
+      setCurrentUser(user);
     } catch (error) {
-      console.log(error.code);
+      if (error.code === "auth/email-already-in-use") {
+        alert("Sign In failed, Try again!");
+      } else {
+        console.error(error);
+      }
     }
   };
 
