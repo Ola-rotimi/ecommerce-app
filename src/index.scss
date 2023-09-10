@@ -4,10 +4,28 @@
 
 body {
   margin: 0;
+  padding: 20px 40px;
   font-family: "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  margin: 20px;
+  background: #F0F0F0;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C4C1A4;
+  border-radius: 5px;
+}
+
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
